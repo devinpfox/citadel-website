@@ -46,7 +46,7 @@ export async function GET() {
         About Us <span class="nav-chevron">&#9662;</span>
       </span>
       <div class="nav-dropdown" style="display:none">
-        <a class="nav-dropdown-link" href="${SITE_URL}/about-us">About Us</a>
+        <a class="nav-dropdown-link" href="${SITE_URL}/about">About Us</a>
         <a class="nav-dropdown-link" href="${SITE_URL}/why-choose-us">Why Choose Us?</a>
         <a class="nav-dropdown-link" href="${SITE_URL}/our-commitment">Our Commitment</a>
         <a class="nav-dropdown-link" href="${SITE_URL}/risk-disclosures">Risk Disclosures</a>
@@ -73,7 +73,7 @@ export async function GET() {
     <a class="mobile-menu-link" href="${SITE_URL}/buy-gold">Buy Gold</a>
     <a class="mobile-menu-link" href="${SITE_URL}/buy-silver">Buy Silver</a>
     <a class="mobile-menu-link" href="${SITE_URL}/gold-ira">Gold IRA/401K</a>
-    <a class="mobile-menu-link" href="${SITE_URL}/about-us">About Us</a>
+    <a class="mobile-menu-link" href="${SITE_URL}/about">About Us</a>
     <a href="tel:8006055597" class="mobile-menu-cta">Call Now 800-605-5597</a>
   </div>
 </div>`;
@@ -94,7 +94,7 @@ export async function GET() {
     </div>
     <div class="footer-col">
       <h4 class="footer-col-title">Company</h4>
-      <p class="footer-link"><a href="${SITE_URL}/about-us">About Us</a></p>
+      <p class="footer-link"><a href="${SITE_URL}/about">About Us</a></p>
       <p class="footer-link"><a href="${SITE_URL}/our-team">Our Team</a></p>
       <p class="footer-link"><a href="${SITE_URL}/careers">Careers</a></p>
       <p class="footer-link"><a href="${SITE_URL}/press">Press</a></p>
