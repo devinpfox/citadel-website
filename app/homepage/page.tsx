@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { Gem, RefreshCw, Landmark, Compass } from 'lucide-react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 interface MetalPriceData {
   price: number;
@@ -19,11 +21,7 @@ interface MetalPrices {
 }
 
 const CitadelGoldRedesignV2 = () => {
-  const [scrollY, setScrollY] = useState(0);
   const [activeTab, setActiveTab] = useState('gold');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [activeMobileSubmenu, setActiveMobileSubmenu] = useState<string | null>(null);
   const [metalPrices, setMetalPrices] = useState<MetalPrices | null>(null);
   const [coinsFront, setCoinsFront] = useState<'gold' | 'silver'>('gold');
 
@@ -33,12 +31,6 @@ const CitadelGoldRedesignV2 = () => {
   const [calcAsset, setCalcAsset] = useState<'stocks' | 'bonds' | 'savings' | 'cds'>('stocks');
   const [goldData, setGoldData] = useState<{ cagr: number; loading: boolean }>({ cagr: 0.165, loading: true });
   const [showCalcPopup, setShowCalcPopup] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     // Current market prices - January 2026 with 30-day history
@@ -61,18 +53,6 @@ const CitadelGoldRedesignV2 = () => {
       }
     });
   }, []);
-
-  // Close mobile menu when clicking outside or on a link
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [mobileMenuOpen]);
 
   // Auto-swap coins every 8 seconds
   useEffect(() => {
@@ -181,196 +161,7 @@ const CitadelGoldRedesignV2 = () => {
 
   return (
     <div className="citadel-root">
-      {/* Navigation */}
-      <nav className={`nav ${scrollY > 50 ? 'nav-scrolled' : ''}`}>
-        <div className="nav-logo">
-          <Image
-            src="/citadel-logo-official.png"
-            alt="Citadel Gold"
-            width={200}
-            height={48}
-            className="nav-logo-official"
-          />
-        </div>
-
-        {/* Desktop Navigation */}
-        <div className="nav-links-desktop">
-          <span className="nav-link">Home</span>
-          <span className="nav-link">Buy Gold</span>
-          <span className="nav-link">Buy Silver</span>
-
-          {/* Gold IRA/401K Dropdown */}
-          <div
-            className="nav-dropdown-wrapper"
-            onMouseEnter={() => setActiveDropdown('ira')}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <span className="nav-link nav-link-has-dropdown">
-              Gold IRA/401K <span className="nav-chevron">&#9662;</span>
-            </span>
-            {activeDropdown === 'ira' && (
-              <div className="nav-dropdown">
-                {['Gold IRA', 'Gold IRA Guide', 'IRA Intake Form', 'What is a Gold IRA Rollover?', 'Why Invest in Gold', 'Free Gold IRA Kit'].map((item) => (
-                  <a key={item} className="nav-dropdown-link">{item}</a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Resources Mega Menu */}
-          <div
-            className="nav-dropdown-wrapper"
-            onMouseEnter={() => setActiveDropdown('resources')}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <span className="nav-link nav-link-has-dropdown">
-              Resources <span className="nav-chevron">&#9662;</span>
-            </span>
-            {activeDropdown === 'resources' && (
-              <div className="nav-megamenu">
-                <div className="megamenu-col">
-                  <h4 className="megamenu-heading">Important Information</h4>
-                  <a className="megamenu-link"><strong>Delaware Depository</strong> — Security, insurance &amp; audits</a>
-                  <a className="megamenu-link"><strong>Gold IRA Steps</strong> — How to open, fund &amp; stay compliant</a>
-                  <a className="megamenu-link"><strong>Gold vs. Other Assets</strong> — 20-year performance at a glance</a>
-                </div>
-                <div className="megamenu-col megamenu-col-products">
-                  <h4 className="megamenu-heading">Retirement Plans — Investment Grade Quality</h4>
-                  <div className="megamenu-products">
-                    <div className="megamenu-product">
-                      <Image src="/gold-american-eagle.png" alt="Gold American Eagle" width={120} height={120} className="megamenu-product-img" />
-                      <span className="megamenu-product-name">Gold American Eagle Proof</span>
-                    </div>
-                    <div className="megamenu-product">
-                      <Image src="/silver-american-eagle.png" alt="Silver American Eagle" width={120} height={120} className="megamenu-product-img" />
-                      <span className="megamenu-product-name">Silver American Eagle Proof</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="megamenu-col megamenu-col-guide">
-                  <p className="megamenu-guide-label">Get Our Free Guide</p>
-                  <h4 className="megamenu-guide-title">Precious Metals Investment Guide</h4>
-                  <Image src="/precious-metals-guide.png" alt="Investment Guide" width={140} height={180} className="megamenu-guide-img" />
-                  <a className="megamenu-guide-btn">Get Gold Investment Guide</a>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* About Us Dropdown */}
-          <div
-            className="nav-dropdown-wrapper"
-            onMouseEnter={() => setActiveDropdown('about')}
-            onMouseLeave={() => setActiveDropdown(null)}
-          >
-            <span className="nav-link nav-link-has-dropdown">
-              About Us <span className="nav-chevron">&#9662;</span>
-            </span>
-            {activeDropdown === 'about' && (
-              <div className="nav-dropdown">
-                {['About Us', 'Why Choose Us?', 'Our Commitment', 'Risk Disclosures', 'Careers', 'FAQs', 'Terms and Conditions', 'Contact'].map((item) => (
-                  <a key={item} className="nav-dropdown-link">{item}</a>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <a href="tel:8006055597" className="nav-cta-desktop">Call Now 800-605-5597</a>
-
-        {/* Hamburger Button */}
-        <button
-          className="hamburger"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
-          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
-          <span className={`hamburger-line ${mobileMenuOpen ? 'open' : ''}`}></span>
-        </button>
-      </nav>
-
-      {/* Mobile Menu Overlay */}
-      <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
-        <div className="mobile-menu-content">
-          <a className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>Home</a>
-          <a className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>Buy Gold</a>
-          <a className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>Buy Silver</a>
-
-          {/* Gold IRA/401K */}
-          <div className="mobile-submenu-wrapper">
-            <a className="mobile-menu-link" onClick={() => setActiveMobileSubmenu(activeMobileSubmenu === 'ira' ? null : 'ira')}>
-              Gold IRA/401K <span className={`mobile-chevron ${activeMobileSubmenu === 'ira' ? 'open' : ''}`}>&#9662;</span>
-            </a>
-            {activeMobileSubmenu === 'ira' && (
-              <div className="mobile-submenu">
-                {['Gold IRA', 'Gold IRA Guide', 'IRA Intake Form', 'What is a Gold IRA Rollover?', 'Why Invest in Gold', 'Free Gold IRA Kit'].map((item) => (
-                  <a key={item} className="mobile-submenu-link" onClick={() => setMobileMenuOpen(false)}>{item}</a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Resources */}
-          <div className="mobile-submenu-wrapper">
-            <a className="mobile-menu-link" onClick={() => setActiveMobileSubmenu(activeMobileSubmenu === 'resources' ? null : 'resources')}>
-              Resources <span className={`mobile-chevron ${activeMobileSubmenu === 'resources' ? 'open' : ''}`}>&#9662;</span>
-            </a>
-            {activeMobileSubmenu === 'resources' && (
-              <div className="mobile-submenu">
-                {['Delaware Depository', 'Gold IRA Steps', 'Gold vs. Other Assets', 'Gold American Eagle', 'Silver American Eagle', 'Get Gold Investment Guide'].map((item) => (
-                  <a key={item} className="mobile-submenu-link" onClick={() => setMobileMenuOpen(false)}>{item}</a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* About Us */}
-          <div className="mobile-submenu-wrapper">
-            <a className="mobile-menu-link" onClick={() => setActiveMobileSubmenu(activeMobileSubmenu === 'about' ? null : 'about')}>
-              About Us <span className={`mobile-chevron ${activeMobileSubmenu === 'about' ? 'open' : ''}`}>&#9662;</span>
-            </a>
-            {activeMobileSubmenu === 'about' && (
-              <div className="mobile-submenu">
-                {['About Us', 'Why Choose Us?', 'Our Commitment', 'Risk Disclosures', 'Careers', 'FAQs', 'Terms and Conditions', 'Contact'].map((item) => (
-                  <a key={item} className="mobile-submenu-link" onClick={() => setMobileMenuOpen(false)}>{item}</a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <a href="tel:8006055597" className="mobile-menu-cta">Call Now 800-605-5597</a>
-        </div>
-      </div>
-
-      {/* Price Ticker Banner */}
-      {metalPrices && (
-        <div className="price-ticker">
-          <div className="price-ticker-inner">
-            {[
-              { name: 'GOLD', ...metalPrices.gold },
-              { name: 'SILVER', ...metalPrices.silver },
-              { name: 'PLATINUM', ...metalPrices.platinum },
-              { name: 'PALLADIUM', ...metalPrices.palladium },
-              { name: 'GOLD', ...metalPrices.gold },
-              { name: 'SILVER', ...metalPrices.silver },
-              { name: 'PLATINUM', ...metalPrices.platinum },
-              { name: 'PALLADIUM', ...metalPrices.palladium },
-            ].map((metal, i) => (
-              <div key={i} className="price-ticker-item">
-                <span className="ticker-metal">{metal.name}</span>
-                <span className="ticker-price">${metal.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                <span className={`ticker-change ${metal.change >= 0 ? 'positive' : 'negative'}`}>
-                  {metal.change >= 0 ? '+' : ''}{metal.change.toFixed(2)}
-                </span>
-                <span className={`ticker-percent ${metal.change >= 0 ? 'positive' : 'negative'}`}>
-                  {metal.change >= 0 ? '+' : ''}{metal.changePercent.toFixed(2)}%
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <Header />
 
       {/* Hero Section - DARK */}
       <section className="hero green-bg-overlay">
@@ -957,51 +748,7 @@ const CitadelGoldRedesignV2 = () => {
         </div>
       </section>
 
-      {/* Footer - DARK */}
-      <footer className="footer green-bg-overlay">
-        <div className="footer-grid">
-          <div className="footer-brand">
-            <div className="footer-trust-badges">
-              <Image
-                src="/trust-badge-footer.png"
-                alt="Secure Payments, Fast & Free Shipping, Premium Quality, 24/7 Customer Support"
-                width={300}
-                height={60}
-                className="footer-badges-img"
-              />
-            </div>
-            <div className="footer-logo">
-              <Image
-                src="/citadel-logo-official.png"
-                alt="Citadel Gold"
-                width={180}
-                height={44}
-                className="nav-logo-official"
-              />
-            </div>
-            <p className="footer-tagline">
-              Guiding families toward lasting financial security through precious metals.
-            </p>
-          </div>
-
-          {[
-            { title: 'Company', links: ['About Us', 'Our Team', 'Careers', 'Press'] },
-            { title: 'Resources', links: ['Gold IRA Guide', 'Market News', 'FAQ', 'Blog'] },
-            { title: 'Private Client Line', links: ['800-605-5597', 'info@citadelgold.com', 'Los Angeles, CA'] }
-          ].map((col, i) => (
-            <div key={i} className="footer-col">
-              <h4 className="footer-col-title">{col.title}</h4>
-              {col.links.map((link, j) => (
-                <p key={j} className="footer-link">{link}</p>
-              ))}
-            </div>
-          ))}
-        </div>
-
-        <div className="footer-bottom">
-          <p>© 2025 Citadel Gold. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
 
       {/* Calculator Popup */}
       {showCalcPopup && (
