@@ -1,11 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function ThankYouPage() {
+  useEffect(() => {
+    // Auto-download the PDF guide when the page loads
+    const link = document.createElement('a');
+    link.href = '/Precious Metals Citadel Gold Guide.pdf';
+    link.download = 'Precious Metals Citadel Gold Guide.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, []);
+
   return (
     <div className="thank-you-root">
       <Header />
