@@ -171,12 +171,12 @@ const CitadelGoldRedesignV2 = () => {
           <p className="hero-tagline">A Refined Approach to Precious Metals</p>
 
           <h1 className="hero-title">
-            <span>Protect Your Wealth with</span>
-            <span className="hero-title-gold">Physical Gold & Silver</span>
+            <span>Preserve Your</span>
+            <span className="hero-title-gold">Legacy with Gold</span>
           </h1>
 
           <p className="hero-subtitle">
-          Transparent Pricing. Dedicated Advisors. Trusted Buyback Program.
+          Built to Last. Wealth Preserved. Legacy Secured.
           </p>
 
           <div className="hero-buttons">
@@ -204,7 +204,7 @@ const CitadelGoldRedesignV2 = () => {
             <h2 className="video-about-title">ABOUT US</h2>
             <div className="video-about-divider"></div>
             <p className="video-about-text">
-              With over a decade of experience as a trusted gold dealer, Citadel Gold has helped thousands of Americans protect their savings through precious metals investment. Our team is made up of industry veterans, knowledgeable financial educators, and real people who genuinely care about your financial future.
+              With over a decade of experience, Citadel Gold has helped thousands of Americans protect their savings through physical gold and silver. Our team is made up of industry veterans, knowledgeable financial educators, and real people who genuinely care about your financial future.
             </p>
             <p className="video-about-text">
               At Citadel Gold, we don't just sell metals—we build long-term relationships rooted in trust, integrity, and transparency.
@@ -226,9 +226,8 @@ const CitadelGoldRedesignV2 = () => {
             </h2>
 
             <p className="about-text">
-              For over two decades, Citadel Gold has been a trusted gold dealer, helping investors
-              buy physical gold and silver bullion with confidence. We specialize in precious metals investment
-              for those who value stability, discretion, and the enduring protection of tangible assets.
+              For over two decades, Citadel Gold has served as a trusted steward for investors
+              who value stability, discretion, and the enduring protection of tangible assets.
             </p>
 
             <div className="about-features">
@@ -302,21 +301,21 @@ const CitadelGoldRedesignV2 = () => {
       {/* Commitment - DARK */}
       <section className="commitment green-bg-overlay">
         <div className="commitment-container">
-          <p className="section-label">Guaranteed Liquidity</p>
+          <p className="section-label">A Standard of Integrity</p>
 
           <h2 className="commitment-title">
-            Our Gold & Silver <span className="text-gold-italic">Buyback Guarantee</span>
+            Our Commitment to <span className="text-gold-italic">Excellence</span>
           </h2>
 
           <div className="commitment-content">
             <p className="commitment-text">
-              When you buy physical gold or silver bullion from Citadel Gold, you&apos;re not just making a precious metals investment — you&apos;re gaining access to our trusted buyback program. We stand behind every product we sell and will repurchase your metals at competitive market rates when the time comes.
+              At Citadel Gold, excellence isn&apos;t aspirational — it&apos;s operational. We are dedicated to providing high-quality products, from coins to bars, that meet the highest standards of purity, authenticity, and value. Our commitment extends to transparency in pricing, so there are no hidden fees and no surprises.
             </p>
             <p className="commitment-text">
-              As a trusted gold dealer, we ensure your investment remains liquid and accessible. There are no lengthy hold periods or complicated processes — just straightforward gold wealth protection with a clear exit strategy whenever you need it.
+              We build long-term relationships rooted in trust, integrity, and a client-first philosophy. Every interaction — from your first consultation to ongoing portfolio guidance — is handled with the care and discretion you deserve. Your goals become our goals, and your confidence is our measure of success.
             </p>
             <p className="commitment-tagline">
-              Your metals remain a liquid asset. That&apos;s our guarantee.
+              Every interaction reflects our commitment to earning — and keeping — your trust.
             </p>
           </div>
         </div>
@@ -339,7 +338,7 @@ const CitadelGoldRedesignV2 = () => {
               Get Your Free <span className="text-gold-italic">Precious Metals Guide</span>
             </h2>
             <p className="guide-desc">
-              Whether you&apos;re ready to buy physical gold for the first time or looking to expand an existing portfolio with silver bullion, this complimentary guide covers everything you need to know — from IRA structures and tax advantages to choosing the right metals for your goals.
+              Whether you&apos;re exploring gold for the first time or looking to expand an existing portfolio, this complimentary guide covers everything you need to know — from IRA structures and tax advantages to choosing the right metals for your goals.
             </p>
             <p className="guide-desc guide-desc-highlight">
               Join thousands of informed investors who started their journey with this guide.
@@ -366,7 +365,7 @@ const CitadelGoldRedesignV2 = () => {
         <p className="section-label-dark">The Citadel Difference</p>
 
         <h2 className="why-choose-title">
-          Why Investors Choose <span className="text-gold-italic-dark">Citadel Gold</span>
+          Why Discerning Investors <span className="text-gold-italic-dark">Choose Us</span>
         </h2>
 
         <div className="why-choose-grid">
@@ -446,15 +445,15 @@ const CitadelGoldRedesignV2 = () => {
           <p className="section-label-dark">Own Precious Metals Directly</p>
 
           <h2 className="direct-ownership-title">
-            A Smarter Way to Own <span className="text-gold-italic-dark">Physical Gold</span>
+            Beyond Retirement Accounts — <span className="text-gold-italic-dark">Personal Ownership, Fully Allocated</span>
           </h2>
 
           <div className="direct-ownership-content">
             <p className="direct-ownership-text">
-              Not every investment belongs inside a retirement account. For clients seeking direct control over their holdings, we offer gold bullion for sale and silver bullion available for secure home delivery or private vault storage.
+              Not every investment belongs inside a retirement account. For clients seeking direct control over their holdings, Citadel Gold offers fully allocated gold and silver available for secure home delivery or private vault storage.
             </p>
             <p className="direct-ownership-text">
-              Whether diversifying outside of traditional markets or establishing a tangible reserve, direct ownership of physical gold provides complete autonomy — with no custodians, no intermediaries, and no restrictions.
+              Whether diversifying outside of traditional markets or establishing a tangible reserve, direct ownership provides complete autonomy — with no custodians, no intermediaries, and no restrictions.
             </p>
             <p className="direct-ownership-tagline">
               Your metals. Your possession. Your terms.
@@ -474,7 +473,7 @@ const CitadelGoldRedesignV2 = () => {
             <p className="section-label-dark">Real-Time Market Visibility</p>
 
             <h2 className="pricing-title">
-              Transparent Precious <br /><span className="text-gold-italic-dark">Metals Pricing</span>
+              Current Precious <br /><span className="text-gold-italic-dark">Metal Prices</span>
             </h2>
 
             <p className="pricing-desc">
@@ -557,7 +556,7 @@ const CitadelGoldRedesignV2 = () => {
           <p className="section-label">A Guided Process</p>
 
           <h2 className="steps-title">
-            White-Glove Service from <span className="text-gold-italic">Dedicated Advisors</span>
+            How We Work <span className="text-gold-italic">With You</span>
           </h2>
         </div>
 
@@ -588,7 +587,7 @@ const CitadelGoldRedesignV2 = () => {
           </h2>
 
           <p className="why-invest-intro">
-            Gold and silver have been valued for centuries as instruments of gold wealth protection. When you invest in gold and silver, you&apos;re choosing assets that have outlasted every fiat currency in history. Here&apos;s why precious metals remain a cornerstone of sound financial strategy.
+            Gold and silver have been valued for centuries due to their ability to hold value. Here&apos;s why they remain a cornerstone of sound financial strategy.
           </p>
 
           <div className="why-invest-grid">
