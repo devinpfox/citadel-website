@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 export default function GoldSilverPromoPage() {
@@ -11,6 +11,32 @@ export default function GoldSilverPromoPage() {
     phone: '',
     consent: false
   });
+  const [showStickyCta, setShowStickyCta] = useState(false);
+  const [stickyDismissed, setStickyDismissed] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show sticky CTA after scrolling 400px, hide if dismissed
+      if (!stickyDismissed) {
+        setShowStickyCta(window.scrollY > 400);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [stickyDismissed]);
+
+  const scrollToForm = () => {
+    const formElement = document.getElementById('promo-form');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  const dismissSticky = () => {
+    setStickyDismissed(true);
+    setShowStickyCta(false);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,7 +84,7 @@ export default function GoldSilverPromoPage() {
               where you'll learn how to protect your wealth with precious metals!
             </p>
 
-            <form onSubmit={handleSubmit} className="promo-form">
+            <form onSubmit={handleSubmit} className="promo-form" id="promo-form">
               <div className="form-group">
                 <label htmlFor="firstName">First Name *</label>
                 <input
@@ -319,6 +345,24 @@ export default function GoldSilverPromoPage() {
         <span>GET YOUR INVESTOR'S GUIDE TO PRECIOUS METALS</span>
         <a href="#top" className="cta-btn">Request Your Guide</a>
       </section>
+
+      {/* Sticky CTA Bubble */}
+      {showStickyCta && (
+        <div className="sticky-cta">
+          <button className="sticky-close" onClick={dismissSticky} aria-label="Close">
+            ×
+          </button>
+          <div className="sticky-content">
+            <p>
+              <a href="tel:8006055597" className="sticky-call-btn">Call</a>
+              {' '}or{' '}
+              <button onClick={scrollToForm} className="sticky-form-link">fill out the form</button>
+              {' '}to get your free precious metals
+            </p>
+            <span className="sticky-disclaimer">*with qualifying purchases</span>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="promo-footer">
@@ -936,6 +980,101 @@ export default function GoldSilverPromoPage() {
           text-decoration: none;
         }
 
+        /* Sticky CTA Bubble */
+        .sticky-cta {
+          position: fixed;
+          bottom: 24px;
+          right: 24px;
+          background: linear-gradient(135deg, #2a3328 0%, #1f2620 100%);
+          border: 1px solid rgba(212, 175, 55, 0.4);
+          border-radius: 16px;
+          padding: 20px 24px;
+          max-width: 320px;
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.1);
+          z-index: 999;
+          animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .sticky-close {
+          position: absolute;
+          top: 8px;
+          right: 12px;
+          background: transparent;
+          border: none;
+          color: #6a6358;
+          font-size: 20px;
+          cursor: pointer;
+          padding: 4px 8px;
+          line-height: 1;
+          transition: color 0.2s;
+        }
+
+        .sticky-close:hover {
+          color: #d4af37;
+        }
+
+        .sticky-content p {
+          font-size: 14px;
+          line-height: 1.6;
+          color: #f5f0e8;
+          margin: 0;
+          padding-right: 16px;
+        }
+
+        .sticky-call-btn {
+          display: inline-block;
+          background: linear-gradient(135deg, #d4af37, #b8860b);
+          color: #1a1f18;
+          font-weight: 700;
+          font-size: 13px;
+          text-decoration: none;
+          padding: 6px 14px;
+          border-radius: 20px;
+          transition: all 0.3s;
+        }
+
+        .sticky-call-btn:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .sticky-form-link {
+          background: none;
+          border: none;
+          color: #d4af37;
+          font-size: 14px;
+          font-weight: 500;
+          font-family: inherit;
+          text-decoration: underline;
+          text-underline-offset: 3px;
+          cursor: pointer;
+          padding: 0;
+          transition: color 0.2s;
+        }
+
+        .sticky-form-link:hover {
+          color: #f5f0e8;
+        }
+
+        .sticky-disclaimer {
+          display: block;
+          font-size: 11px;
+          color: #6a6358;
+          margin-top: 8px;
+          font-style: italic;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
           .hero-container {
@@ -1042,6 +1181,32 @@ export default function GoldSilverPromoPage() {
           .footer-badges {
             flex-direction: column;
             gap: 12px;
+          }
+
+          .sticky-cta {
+            bottom: 16px;
+            right: 16px;
+            left: 16px;
+            max-width: none;
+            padding: 16px 20px;
+            border-radius: 12px;
+          }
+
+          .sticky-content p {
+            font-size: 13px;
+          }
+
+          .sticky-call-btn {
+            font-size: 12px;
+            padding: 5px 12px;
+          }
+
+          .sticky-form-link {
+            font-size: 13px;
+          }
+
+          .sticky-disclaimer {
+            font-size: 10px;
           }
         }
       `}</style>
