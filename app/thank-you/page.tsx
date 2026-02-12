@@ -16,6 +16,65 @@ export default function ThankYouPage() {
     document.body.removeChild(link);
   }, []);
 
+  useEffect(() => {
+    // Citadel Gold Tracking - Buy Silver Coin Mailout
+    try {
+      const tc = 'tc_64c69104b187';
+      const base = 'https://www.byetalk.com/api/t/' + tc;
+
+      // Generate visitor ID (with fallback if storage blocked)
+      let vid = '';
+      try {
+        vid = localStorage.getItem('_cg_vid') || '';
+        if (!vid) {
+          vid = 'v_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+          localStorage.setItem('_cg_vid', vid);
+        }
+      } catch (e) {
+        vid = 'v_' + Math.random().toString(36).substr(2, 9);
+      }
+
+      // Generate session ID (with fallback if storage blocked)
+      let sid = '';
+      try {
+        sid = sessionStorage.getItem('_cg_sid') || '';
+        if (!sid) {
+          sid = 's_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+          sessionStorage.setItem('_cg_sid', sid);
+        }
+      } catch (e) {
+        sid = 's_' + Math.random().toString(36).substr(2, 9);
+      }
+
+      // Get UTM params
+      const params = new URLSearchParams(window.location.search);
+
+      // Build tracking URL
+      const url = base + '?' + new URLSearchParams({
+        vid: vid,
+        sid: sid,
+        url: window.location.href,
+        title: document.title || '',
+        path: window.location.pathname,
+        ref: document.referrer || '',
+        sw: String(screen.width || 0),
+        sh: String(screen.height || 0),
+        vw: String(window.innerWidth || 0),
+        vh: String(window.innerHeight || 0),
+        utm_source: params.get('utm_source') || '',
+        utm_medium: params.get('utm_medium') || '',
+        utm_campaign: params.get('utm_campaign') || '',
+        utm_content: params.get('utm_content') || '',
+        utm_term: params.get('utm_term') || ''
+      }).toString();
+
+      // Send tracking pixel
+      new Image().src = url;
+    } catch (e) {
+      // Silent fail for tracking
+    }
+  }, []);
+
   return (
     <div className="thank-you-root">
       <Header />
