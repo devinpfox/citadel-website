@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Gem, RefreshCw, Landmark, Compass } from 'lucide-react';
 import Header from '../components/Header';
@@ -31,6 +31,32 @@ const CitadelGoldRedesignV2 = () => {
   const [calcAsset, setCalcAsset] = useState<'stocks' | 'bonds' | 'savings' | 'cds'>('stocks');
   const [goldData, setGoldData] = useState<{ cagr: number; loading: boolean }>({ cagr: 0.165, loading: true });
   const [showCalcPopup, setShowCalcPopup] = useState(false);
+
+  // Consultation modal state
+  const [showConsultationModal, setShowConsultationModal] = useState(false);
+
+  // Video playback state
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [showVideoControls, setShowVideoControls] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [consultationForm, setConsultationForm] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    goals: '',
+    metalInterest: '',
+  });
+
+  // Guide form state
+  const [guideForm, setGuideForm] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    marketingConsent: false,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     // Current market prices - January 2026 with 30-day history
@@ -159,6 +185,86 @@ const CitadelGoldRedesignV2 = () => {
     setCalcAmount(formatted);
   };
 
+  // Consultation form handlers
+  const handleConsultationChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setConsultationForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleConsultationSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          formType: 'consultation',
+          ...consultationForm,
+        }),
+      });
+
+      if (response.ok) {
+        window.location.href = '/thank-you';
+      } else {
+        alert('There was an error submitting the form. Please try again or call us at 800-605-5597.');
+      }
+    } catch {
+      alert('There was an error submitting the form. Please try again or call us at 800-605-5597.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Guide form handlers
+  const handleGuideChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setGuideForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleGuideSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          formType: 'guide',
+          ...guideForm,
+        }),
+      });
+
+      if (response.ok) {
+        window.location.href = '/thank-you';
+      } else {
+        alert('There was an error submitting the form. Please try again or call us at 800-605-5597.');
+      }
+    } catch {
+      alert('There was an error submitting the form. Please try again or call us at 800-605-5597.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Handle video play from overlay
+  const handleVideoPlay = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setShowVideoControls(true);
+    }
+  };
+
+  // Scroll to free guide section
+  const scrollToGuide = () => {
+    document.getElementById('free-guide')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="citadel-root">
       <Header />
@@ -180,8 +286,8 @@ const CitadelGoldRedesignV2 = () => {
           </p>
 
           <div className="hero-buttons">
-            <button className="btn-primary">Request a Private Consultation</button>
-            <button className="btn-secondary">Explore IRA-Eligible Metals</button>
+            <button className="btn-primary" onClick={() => setShowConsultationModal(true)}>Request a Private Consultation</button>
+            <a href="tel:8006055597" className="btn-secondary">Chat with a Precious Metals Specialist</a>
           </div>
 
         </div>
@@ -192,13 +298,27 @@ const CitadelGoldRedesignV2 = () => {
         <div className="video-about-grid">
           <div className="video-about-player">
             <video
-              controls
-              poster="/lead-in-image.jpg"
+              ref={videoRef}
+              controls={showVideoControls}
+              poster="/citadel-video-lead-in.jpg"
               className="video-element"
+              onPlay={() => setIsVideoPlaying(true)}
+              onPause={() => setIsVideoPlaying(false)}
+              onEnded={() => setIsVideoPlaying(false)}
             >
-              <source src="/citadel-gold-video.mov" type="video/mp4" />
+              <source src="https://wp.citadelgold.com/wp-content/uploads/2026/02/CITADEL-GOLD-VIDEO.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
+            <div
+              className={`video-play-overlay ${isVideoPlaying ? 'hidden' : ''}`}
+              onClick={handleVideoPlay}
+            >
+              <div className="video-play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="play-icon">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
           </div>
           <div className="video-about-content">
             <h2 className="video-about-title">ABOUT US</h2>
@@ -284,7 +404,7 @@ const CitadelGoldRedesignV2 = () => {
             <p className="retirement-desc">
               You&apos;ve worked a lifetime to build your future. Now it&apos;s time to protect it. At Citadel Gold, we help safeguard your wealth with tangible assets designed to bring stability, confidence, and peace of mind — so you can focus on living well, not worrying about what&apos;s next.
             </p>
-            <button className="btn-primary">Secure My Retirement</button>
+            <button className="btn-primary" onClick={scrollToGuide}>Secure My Retirement</button>
           </div>
           <div className="retirement-image">
             <Image
@@ -322,7 +442,7 @@ const CitadelGoldRedesignV2 = () => {
       </section>
 
       {/* Guide - LIGHT BG with green container */}
-      <section className="guide guide-light-bg">
+      <section className="guide guide-light-bg" id="free-guide">
         <div className="guide-container green-bg-overlay">
           <Image
             src="/precious-metals-guide.png"
@@ -343,18 +463,56 @@ const CitadelGoldRedesignV2 = () => {
             <p className="guide-desc guide-desc-highlight">
               Join thousands of informed investors who started their journey with this guide.
             </p>
-            <form className="guide-form">
+            <form className="guide-form" onSubmit={handleGuideSubmit}>
               <div className="guide-form-row">
-                <input type="text" placeholder="First Name" className="guide-input" required />
-                <input type="text" placeholder="Last Name" className="guide-input" required />
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder="First Name"
+                  className="guide-input"
+                  value={guideForm.firstName}
+                  onChange={handleGuideChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder="Last Name"
+                  className="guide-input"
+                  value={guideForm.lastName}
+                  onChange={handleGuideChange}
+                  required
+                />
               </div>
-              <input type="email" placeholder="Email Address" className="guide-input guide-input-full" required />
-              <input type="tel" placeholder="Phone (Optional)" className="guide-input guide-input-full" />
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                className="guide-input guide-input-full"
+                value={guideForm.email}
+                onChange={handleGuideChange}
+                required
+              />
+              <input
+                type="tel"
+                name="phone"
+                placeholder="Phone (Optional)"
+                className="guide-input guide-input-full"
+                value={guideForm.phone}
+                onChange={handleGuideChange}
+              />
               <label className="guide-checkbox">
-                <input type="checkbox" />
+                <input
+                  type="checkbox"
+                  name="marketingConsent"
+                  checked={guideForm.marketingConsent}
+                  onChange={handleGuideChange}
+                />
                 <span>I agree to receive marketing communications from Citadel Gold</span>
               </label>
-              <button type="submit" className="btn-primary guide-cta-btn">Download My Free Guide</button>
+              <button type="submit" className="btn-primary guide-cta-btn" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Download My Free Guide'}
+              </button>
             </form>
           </div>
         </div>
@@ -742,8 +900,8 @@ const CitadelGoldRedesignV2 = () => {
           </p>
 
           <div className="cta-buttons">
-            <button className="btn-primary-dark">Request Your Free Guide</button>
-            <button className="btn-secondary-dark">Private Client Line: 800-605-5597</button>
+            <button className="btn-primary-dark" onClick={scrollToGuide}>Request Your Free Guide</button>
+            <a href="tel:8006055597" className="btn-secondary-dark">Private Client Line: 800-605-5597</a>
           </div>
         </div>
       </section>
@@ -776,6 +934,125 @@ const CitadelGoldRedesignV2 = () => {
                 Maybe Later
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Consultation Modal */}
+      {showConsultationModal && (
+        <div className="consultation-modal-overlay" onClick={() => setShowConsultationModal(false)}>
+          <div className="consultation-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="consultation-modal-close" onClick={() => setShowConsultationModal(false)}>×</button>
+
+            <div className="consultation-modal-header">
+              <Image
+                src="/citadel-logo-official.png"
+                alt="Citadel Gold"
+                width={160}
+                height={40}
+                style={{ objectFit: 'contain' }}
+              />
+              <h2 className="consultation-modal-title">Request a Private Consultation</h2>
+              <p className="consultation-modal-subtitle">
+                Connect with a dedicated precious metals specialist who will guide you through every step of your investment journey.
+              </p>
+            </div>
+
+            <form onSubmit={handleConsultationSubmit} className="consultation-form">
+              <div className="consultation-form-row">
+                <div className="consultation-form-group">
+                  <label htmlFor="firstName">First Name *</label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={consultationForm.firstName}
+                    onChange={handleConsultationChange}
+                    required
+                    placeholder="Enter your first name"
+                  />
+                </div>
+                <div className="consultation-form-group">
+                  <label htmlFor="lastName">Last Name *</label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={consultationForm.lastName}
+                    onChange={handleConsultationChange}
+                    required
+                    placeholder="Enter your last name"
+                  />
+                </div>
+              </div>
+
+              <div className="consultation-form-row">
+                <div className="consultation-form-group">
+                  <label htmlFor="email">Email *</label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={consultationForm.email}
+                    onChange={handleConsultationChange}
+                    required
+                    placeholder="Enter your email"
+                  />
+                </div>
+                <div className="consultation-form-group">
+                  <label htmlFor="phone">Phone *</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={consultationForm.phone}
+                    onChange={handleConsultationChange}
+                    required
+                    placeholder="Enter your phone number"
+                  />
+                </div>
+              </div>
+
+              <div className="consultation-form-group">
+                <label htmlFor="goals">What are your goals?</label>
+                <select
+                  id="goals"
+                  name="goals"
+                  value={consultationForm.goals}
+                  onChange={handleConsultationChange}
+                >
+                  <option value="">Select your goal</option>
+                  <option value="protect-retirement">Protect retirement account</option>
+                  <option value="protect-savings">Protect cash savings</option>
+                  <option value="both">Both</option>
+                </select>
+              </div>
+
+              <div className="consultation-form-group">
+                <label htmlFor="metalInterest">What are you most interested in?</label>
+                <select
+                  id="metalInterest"
+                  name="metalInterest"
+                  value={consultationForm.metalInterest}
+                  onChange={handleConsultationChange}
+                >
+                  <option value="">Select your interest</option>
+                  <option value="gold">Gold</option>
+                  <option value="silver">Silver</option>
+                  <option value="platinum">Platinum</option>
+                  <option value="palladium">Palladium</option>
+                  <option value="all-metals">All metals</option>
+                </select>
+              </div>
+
+              <button type="submit" className="consultation-submit-btn" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Schedule My Consultation'}
+              </button>
+
+              <p className="consultation-privacy">
+                Your information is secure and will never be shared. By submitting, you agree to receive communications from Citadel Gold.
+              </p>
+            </form>
           </div>
         </div>
       )}
@@ -1366,7 +1643,13 @@ const CitadelGoldRedesignV2 = () => {
           display: flex;
           gap: 24px;
           justify-content: center;
-          flex-wrap: wrap;
+        }
+
+        .hero-buttons .btn-primary,
+        .hero-buttons .btn-secondary {
+          min-width: 320px;
+          text-align: center;
+          white-space: nowrap;
         }
 
         .btn-primary {
@@ -1400,6 +1683,8 @@ const CitadelGoldRedesignV2 = () => {
           text-transform: uppercase;
           cursor: pointer;
           transition: all 0.3s;
+          text-decoration: none;
+          display: inline-block;
         }
 
         .btn-secondary:hover {
@@ -1438,12 +1723,60 @@ const CitadelGoldRedesignV2 = () => {
 
         .video-about-player {
           position: relative;
+          cursor: pointer;
         }
 
         .video-element {
           width: 100%;
           border-radius: 4px;
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-play-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: opacity 0.3s;
+        }
+
+        .video-play-overlay.hidden {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .video-play-button {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          border: 3px solid #ffffff;
+          background: rgba(0, 0, 0, 0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+        }
+
+        .play-icon {
+          width: 32px;
+          height: 32px;
+          color: #ffffff;
+          margin-left: 4px;
+          transition: color 0.3s ease;
+        }
+
+        .video-about-player:hover .video-play-button {
+          border-color: #d4af37;
+          background: rgba(0, 0, 0, 0.5);
+        }
+
+        .video-about-player:hover .play-icon {
+          color: #d4af37;
         }
 
         .video-about-content {
@@ -1476,22 +1809,22 @@ const CitadelGoldRedesignV2 = () => {
 
         .video-about-btn {
           margin-top: 16px;
-          padding: 16px 48px;
+          padding: 18px 48px;
           background: linear-gradient(135deg, #d4af37, #b8860b);
           border: none;
-          color: #1a1915;
+          color: #2a3328;
           font-family: 'Montserrat', sans-serif;
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 600;
-          letter-spacing: 1px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
           cursor: pointer;
-          border-radius: 4px;
           transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .video-about-btn:hover {
           transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
+          box-shadow: 0 12px 40px rgba(212, 175, 55, 0.45);
         }
 
         /* About */
@@ -2252,6 +2585,9 @@ const CitadelGoldRedesignV2 = () => {
           text-transform: uppercase;
           cursor: pointer;
           transition: all 0.3s;
+          text-decoration: none;
+          display: inline-block;
+          text-align: center;
         }
 
         .btn-secondary-dark:hover {
@@ -2871,6 +3207,191 @@ const CitadelGoldRedesignV2 = () => {
           color: #f5f0e8;
         }
 
+        /* Consultation Modal */
+        .consultation-modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 10000;
+          padding: 20px;
+          animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        .consultation-modal {
+          background: linear-gradient(145deg, #2a3328, #1a2118);
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          padding: 48px;
+          max-width: 580px;
+          width: 100%;
+          max-height: 90vh;
+          overflow-y: auto;
+          position: relative;
+          box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6), 0 0 60px rgba(212, 175, 55, 0.1);
+          animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+          from {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.98);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .consultation-modal-close {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          background: transparent;
+          border: none;
+          color: #6a6358;
+          font-size: 28px;
+          cursor: pointer;
+          transition: color 0.3s;
+          width: 40px;
+          height: 40px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .consultation-modal-close:hover {
+          color: #d4af37;
+        }
+
+        .consultation-modal-header {
+          text-align: center;
+          margin-bottom: 36px;
+        }
+
+        .consultation-modal-title {
+          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-size: 32px;
+          font-weight: 400;
+          color: #d4af37;
+          margin-top: 24px;
+          margin-bottom: 12px;
+        }
+
+        .consultation-modal-subtitle {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 14px;
+          color: #a89f8c;
+          line-height: 1.7;
+          max-width: 420px;
+          margin: 0 auto;
+        }
+
+        .consultation-form {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        .consultation-form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+        }
+
+        .consultation-form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+        }
+
+        .consultation-form-group label {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: #d4af37;
+        }
+
+        .consultation-form-group input,
+        .consultation-form-group select {
+          padding: 14px 18px;
+          background: rgba(0, 0, 0, 0.3);
+          border: 1px solid rgba(212, 175, 55, 0.2);
+          color: #f5f0e8;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 14px;
+          transition: all 0.3s;
+          outline: none;
+        }
+
+        .consultation-form-group input::placeholder {
+          color: #6a6358;
+        }
+
+        .consultation-form-group input:focus,
+        .consultation-form-group select:focus {
+          border-color: rgba(212, 175, 55, 0.5);
+          background: rgba(0, 0, 0, 0.4);
+        }
+
+        .consultation-form-group select {
+          cursor: pointer;
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23d4af37' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 16px center;
+          padding-right: 40px;
+        }
+
+        .consultation-form-group select option {
+          background: #2a3328;
+          color: #f5f0e8;
+        }
+
+        .consultation-submit-btn {
+          margin-top: 12px;
+          padding: 18px 48px;
+          background: linear-gradient(135deg, #d4af37, #b8860b);
+          border: none;
+          color: #2a3328;
+          font-family: 'Montserrat', sans-serif;
+          font-size: 13px;
+          font-weight: 600;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+
+        .consultation-submit-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 40px rgba(212, 175, 55, 0.4);
+        }
+
+        .consultation-privacy {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 11px;
+          color: #6a6358;
+          text-align: center;
+          line-height: 1.6;
+          margin-top: 8px;
+        }
+
         /* TABLET STYLES */
         @media (max-width: 1024px) {
           .nav {
@@ -3085,8 +3606,8 @@ const CitadelGoldRedesignV2 = () => {
           }
 
           .video-about-btn {
-            padding: 14px 36px;
-            font-size: 12px;
+            padding: 16px 32px;
+            font-size: 11px;
           }
 
           .hero-tagline {
@@ -3101,14 +3622,20 @@ const CitadelGoldRedesignV2 = () => {
           }
 
           .hero-buttons {
-            flex-direction: column;
-            align-items: center;
+            flex-wrap: wrap;
+          }
+
+          .hero-buttons .btn-primary,
+          .hero-buttons .btn-secondary {
+            min-width: auto;
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 9px;
+            white-space: nowrap;
           }
 
           .btn-primary,
           .btn-secondary {
-            width: 100%;
-            max-width: 280px;
             padding: 16px 32px;
           }
 
@@ -3341,6 +3868,41 @@ const CitadelGoldRedesignV2 = () => {
             width: 100%;
             max-width: 280px;
             padding: 16px 32px;
+          }
+
+          /* Consultation Modal Mobile */
+          .consultation-modal {
+            padding: 32px 24px;
+            max-height: 95vh;
+          }
+
+          .consultation-modal-close {
+            top: 12px;
+            right: 12px;
+          }
+
+          .consultation-modal-title {
+            font-size: 26px;
+          }
+
+          .consultation-modal-subtitle {
+            font-size: 13px;
+          }
+
+          .consultation-form-row {
+            grid-template-columns: 1fr;
+            gap: 16px;
+          }
+
+          .consultation-form-group input,
+          .consultation-form-group select {
+            padding: 12px 14px;
+            font-size: 16px; /* Prevents iOS zoom */
+          }
+
+          .consultation-submit-btn {
+            padding: 16px 32px;
+            font-size: 12px;
           }
 
           .footer {
