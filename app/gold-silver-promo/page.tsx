@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Script from 'next/script';
 
@@ -15,6 +15,16 @@ export default function GoldSilverPromoPage() {
   const [showStickyCta, setShowStickyCta] = useState(false);
   const [stickyDismissed, setStickyDismissed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [showVideoControls, setShowVideoControls] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleVideoPlay = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setShowVideoControls(true);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -396,6 +406,53 @@ export default function GoldSilverPromoPage() {
           considered to help protect your wealth. Our Gold & Silver Investor's Guide will show you how to
           protect your savings and maximize your potential returns by investing in gold.
         </p>
+      </section>
+
+      {/* Video Section - The Golden Thread of History */}
+      <section className="video-section">
+        <div className="video-container">
+          <div className="video-content">
+            <h2 className="video-title">The Golden Thread of History</h2>
+            <div className="video-divider"></div>
+            <p className="video-text">
+              For over 5,000 years, gold has been the foundation of power and commerce—from the Pharaohs
+              of Egypt to the Roman legions, from the California Gold Rush that built America to the
+              financial institutions that still rely on it today.
+            </p>
+            <p className="video-text">
+              All the gold ever mined in human history would only fill about three Olympic-sized swimming
+              pools. This extraordinary rarity is what makes gold a timeless asset that survives wars,
+              depressions, and financial revolutions.
+            </p>
+            <p className="video-highlight">
+              Paper money is fleeting. Gold is eternal.
+            </p>
+          </div>
+          <div className="video-player-wrapper">
+            <video
+              ref={videoRef}
+              controls={showVideoControls}
+              poster="/citadel-video-lead-in.jpg"
+              className="promo-video"
+              onPlay={() => setIsVideoPlaying(true)}
+              onPause={() => setIsVideoPlaying(false)}
+              onEnded={() => setIsVideoPlaying(false)}
+            >
+              <source src="https://wp.citadelgold.com/wp-content/uploads/2026/02/CITADEL-GOLD-VIDEO-10mb.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+            <div
+              className={`video-play-overlay ${isVideoPlaying ? 'hidden' : ''}`}
+              onClick={handleVideoPlay}
+            >
+              <div className="video-play-button">
+                <svg viewBox="0 0 24 24" fill="currentColor" className="play-icon">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* CTA Bar */}
@@ -855,6 +912,113 @@ export default function GoldSilverPromoPage() {
           color: #4a4740;
         }
 
+        /* Video Section */
+        .video-section {
+          background: linear-gradient(135deg, #1a1f18 0%, #2a3328 100%);
+          padding: 80px 60px;
+        }
+
+        .video-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          display: grid;
+          grid-template-columns: 1fr 1.2fr;
+          gap: 60px;
+          align-items: center;
+        }
+
+        .video-content {
+          text-align: left;
+        }
+
+        .video-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 32px;
+          font-weight: 600;
+          color: #f5f0e8;
+          margin-bottom: 20px;
+        }
+
+        .video-divider {
+          width: 80px;
+          height: 3px;
+          background: linear-gradient(90deg, #d4af37, #b8860b);
+          margin-bottom: 24px;
+        }
+
+        .video-text {
+          font-size: 15px;
+          line-height: 1.8;
+          color: #a89f8c;
+          margin-bottom: 20px;
+        }
+
+        .video-highlight {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 22px;
+          font-style: italic;
+          color: #d4af37;
+          margin-top: 24px;
+        }
+
+        .video-player-wrapper {
+          position: relative;
+          cursor: pointer;
+        }
+
+        .promo-video {
+          width: 100%;
+          border-radius: 4px;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .video-play-overlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: opacity 0.3s;
+        }
+
+        .video-play-overlay.hidden {
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .video-play-button {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          border: 3px solid #ffffff;
+          background: rgba(0, 0, 0, 0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.3s ease;
+        }
+
+        .play-icon {
+          width: 32px;
+          height: 32px;
+          color: #ffffff;
+          margin-left: 4px;
+          transition: color 0.3s ease;
+        }
+
+        .video-player-wrapper:hover .video-play-button {
+          border-color: #d4af37;
+          background: rgba(0, 0, 0, 0.5);
+        }
+
+        .video-player-wrapper:hover .play-icon {
+          color: #d4af37;
+        }
+
         /* CTA Bar */
         .cta-bar {
           background: #1a1f18;
@@ -1275,9 +1439,53 @@ export default function GoldSilverPromoPage() {
           .depository-container {
             grid-template-columns: 1fr;
           }
+
+          .video-container {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+
+          .video-content {
+            text-align: center;
+            order: 1;
+          }
+
+          .video-player-wrapper {
+            order: 0;
+          }
+
+          .video-divider {
+            margin-left: auto;
+            margin-right: auto;
+          }
         }
 
         @media (max-width: 768px) {
+          .video-section {
+            padding: 60px 24px;
+          }
+
+          .video-title {
+            font-size: 26px;
+          }
+
+          .video-text {
+            font-size: 14px;
+          }
+
+          .video-highlight {
+            font-size: 18px;
+          }
+
+          .video-play-button {
+            width: 60px;
+            height: 60px;
+          }
+
+          .play-icon {
+            width: 24px;
+            height: 24px;
+          }
           .promo-header {
             padding: 16px 24px;
             flex-direction: column;
