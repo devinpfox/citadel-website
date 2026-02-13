@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Script from 'next/script';
 
 export default function GoldSilverPromoPage() {
   const [formData, setFormData] = useState({
@@ -71,9 +72,176 @@ export default function GoldSilverPromoPage() {
   };
 
   return (
-    <div className="promo-page">
-      {/* Header */}
-      <header className="promo-header">
+    <>
+      {/* Citadel Gold Tracking - First Mail Out */}
+      <Script id="citadel-tracking" strategy="afterInteractive">
+        {`
+(function() {
+  var tc = 'tc_acbc9fa041ac';
+  var base = 'https://www.byetalk.com/api/t/' + tc;
+  var engageBase = 'https://www.byetalk.com/api/t/engagement';
+  var abandonBase = 'https://www.byetalk.com/api/t/abandonment';
+
+  // Generate visitor ID
+  var vid = '';
+  try {
+    vid = localStorage.getItem('_cg_vid') || '';
+    if (!vid) {
+      vid = 'v_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+      localStorage.setItem('_cg_vid', vid);
+    }
+  } catch(e) { vid = 'v_' + Math.random().toString(36).substr(2, 9); }
+
+  // Generate session ID
+  var sid = '';
+  try {
+    sid = sessionStorage.getItem('_cg_sid') || '';
+    if (!sid) {
+      sid = 's_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+      sessionStorage.setItem('_cg_sid', sid);
+    }
+  } catch(e) { sid = 's_' + Math.random().toString(36).substr(2, 9); }
+
+  // Get UTM params
+  var params = new URLSearchParams(window.location.search);
+  var utms = {
+    utm_source: params.get('utm_source') || '',
+    utm_medium: params.get('utm_medium') || '',
+    utm_campaign: params.get('utm_campaign') || '',
+    utm_content: params.get('utm_content') || '',
+    utm_term: params.get('utm_term') || ''
+  };
+
+  // Send initial pageview
+  new Image().src = base + '?' + new URLSearchParams({
+    vid: vid, sid: sid,
+    url: window.location.href,
+    title: document.title || '',
+    path: window.location.pathname,
+    ref: document.referrer || '',
+    sw: String(screen.width || 0),
+    sh: String(screen.height || 0),
+    vw: String(window.innerWidth || 0),
+    vh: String(window.innerHeight || 0),
+    ...utms
+  }).toString();
+
+  // ========== ENGAGEMENT TRACKING ==========
+  var startTime = Date.now();
+  var maxScroll = 0;
+  var clicks = 0;
+  var formInt = 0;
+  var fieldsTouched = [];
+  var formFields = {};
+  var submitted = false;
+
+  // Track scroll depth
+  window.addEventListener('scroll', function() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    if (pct > maxScroll) maxScroll = pct;
+  }, {passive: true});
+
+  // Track clicks
+  document.addEventListener('click', function() { clicks++; });
+
+  // Calculate engagement score (0-100)
+  function calcScore() {
+    var time = (Date.now() - startTime) / 1000;
+    var timeScore = Math.min(30, (time / 120) * 30);
+    var scrollScore = Math.min(25, (maxScroll / 75) * 25);
+    var clickScore = Math.min(20, (clicks / 5) * 20);
+    var formScore = Math.min(25, (formInt / 4) * 25);
+    return Math.round(timeScore + scrollScore + clickScore + formScore);
+  }
+
+  // Track form interactions
+  document.addEventListener('input', function(e) {
+    var t = e.target;
+    if (!t.name && !t.id) return;
+    var name = t.name || t.id;
+    formInt++;
+    if (fieldsTouched.indexOf(name) === -1) fieldsTouched.push(name);
+
+    // Capture field value (masked)
+    var val = t.value || '';
+    if (t.type === 'email' && val.indexOf('@') > -1) {
+      var parts = val.split('@');
+      val = parts[0].slice(0,2) + '***@' + parts[1];
+    } else if (t.type === 'tel' || name.toLowerCase().indexOf('phone') > -1) {
+      val = '***' + val.replace(/\\D/g, '').slice(-4);
+    }
+    if (val) formFields[name] = val;
+  });
+
+  // Track form submit
+  document.addEventListener('submit', function() { submitted = true; });
+
+  // Send engagement data
+  function sendEngagement(final) {
+    var score = calcScore();
+    var time = Math.round((Date.now() - startTime) / 1000);
+    var url = engageBase + '?' + new URLSearchParams({
+      tc: tc, vid: vid, sid: sid,
+      url: window.location.href,
+      path: window.location.pathname,
+      event: final ? 'exit' : 'engagement',
+      score: String(score),
+      time: String(time),
+      scroll: String(Math.round(maxScroll)),
+      clicks: String(clicks),
+      formInt: String(formInt),
+      fields: fieldsTouched.join(',')
+    }).toString();
+    if (final && navigator.sendBeacon) {
+      navigator.sendBeacon(url);
+    } else {
+      new Image().src = url;
+    }
+  }
+
+  // Send form abandonment
+  function sendAbandonment() {
+    if (submitted || Object.keys(formFields).length === 0) return;
+    var data = JSON.stringify({
+      tc: tc, vid: vid, sid: sid,
+      url: window.location.href,
+      path: window.location.pathname,
+      formId: 'form',
+      fields: formFields,
+      engagementScore: calcScore(),
+      timeOnPage: Math.round((Date.now() - startTime) / 1000),
+      scrollDepth: Math.round(maxScroll)
+    });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(abandonBase, data);
+    } else {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', abandonBase, false);
+      xhr.send(data);
+    }
+  }
+
+  // Periodic engagement updates (every 15s)
+  setInterval(function() { sendEngagement(false); }, 15000);
+
+  // Send on page exit
+  window.addEventListener('beforeunload', function() {
+    sendEngagement(true);
+    sendAbandonment();
+  });
+  window.addEventListener('pagehide', function() {
+    sendEngagement(true);
+    sendAbandonment();
+  });
+})();
+        `}
+      </Script>
+
+      <div className="promo-page">
+        {/* Header */}
+        <header className="promo-header">
         <div className="header-logo">
           <Image
             src="/citadel-logo-official.png"
@@ -1229,5 +1397,6 @@ export default function GoldSilverPromoPage() {
         }
       `}</style>
     </div>
+    </>
   );
 }
