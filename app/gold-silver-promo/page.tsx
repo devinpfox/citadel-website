@@ -13,6 +13,7 @@ export default function GoldSilverPromoPage() {
   });
   const [showStickyCta, setShowStickyCta] = useState(false);
   const [stickyDismissed, setStickyDismissed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,9 +39,26 @@ export default function GoldSilverPromoPage() {
     setShowStickyCta(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission - redirect to thank you or process
+    setIsSubmitting(true);
+
+    try {
+      // Submit to ByeTalk CRM
+      await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          form_id: 'gold-silver-promo',
+          form_name: 'Gold & Silver Promo Form',
+          ...formData,
+        }),
+      });
+    } catch (error) {
+      console.error('Form submission error:', error);
+    }
+
+    // Redirect to thank you page regardless of API result
     window.location.href = '/thank-you';
   };
 
@@ -151,8 +169,8 @@ export default function GoldSilverPromoPage() {
                 </label>
               </div>
 
-              <button type="submit" className="submit-btn">
-                Request Your Guide
+              <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Request Your Guide'}
               </button>
             </form>
           </div>

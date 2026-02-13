@@ -1,10 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+// ByeTalk CRM API configuration
+const BYETALK_API_URL = process.env.BYETALK_API_URL || 'https://byetalk.com';
+const BYETALK_API_KEY = process.env.BYETALK_API_KEY || 'citadel-forms-key-2024';
+
+/**
+ * Forward form submission to ByeTalk CRM
+ */
+async function submitToByeTalk(data: {
+  form_id: string;
+  form_name: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  message?: string;
+  consent?: boolean;
+  referer?: string;
+}) {
+  try {
+    const response = await fetch(`${BYETALK_API_URL}/api/forms/submit`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': BYETALK_API_KEY,
+      },
+      body: JSON.stringify({
+        form_id: data.form_id,
+        form_name: data.form_name,
+        form_url: data.referer || 'https://citadelgold.com',
+        first_name: data.firstName || null,
+        last_name: data.lastName || null,
+        email: data.email || null,
+        phone: data.phone || null,
+        message: data.message || null,
+        consent: data.consent || false,
+        landing_page_url: data.referer || null,
+      }),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log('[Contact API] Submitted to ByeTalk:', result.submission_id);
+    } else {
+      console.error('[Contact API] ByeTalk submission failed:', response.status);
+    }
+  } catch (error) {
+    console.error('[Contact API] ByeTalk submission error:', error);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { formType, firstName, lastName, email, phone, goals, metalInterest, marketingConsent } = body;
+    const referer = request.headers.get('referer') || '';
 
     // Create email content based on form type
     let subject = '';
@@ -83,6 +134,19 @@ export async function POST(request: NextRequest) {
       subject: subject,
       html: htmlContent,
       replyTo: email,
+    });
+
+    // Submit to ByeTalk CRM (async, don't wait)
+    submitToByeTalk({
+      form_id: formType === 'consultation' ? 'private-consultation' : 'free-guide',
+      form_name: formType === 'consultation' ? 'Private Consultation Request' : 'Free Guide Request',
+      firstName,
+      lastName,
+      email,
+      phone,
+      message: goals ? `Goals: ${goals}. Metal Interest: ${metalInterest || 'Not specified'}` : undefined,
+      consent: marketingConsent,
+      referer,
     });
 
     return NextResponse.json({ success: true, message: 'Form submitted successfully' });
