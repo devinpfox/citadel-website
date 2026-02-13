@@ -306,7 +306,7 @@ const CitadelGoldRedesignV2 = () => {
               onPause={() => setIsVideoPlaying(false)}
               onEnded={() => setIsVideoPlaying(false)}
             >
-              <source src="https://wp.citadelgold.com/wp-content/uploads/2026/02/CITADEL-GOLD-VIDEO.mp4" type="video/mp4" />
+              <source src="https://wp.citadelgold.com/wp-content/uploads/2026/02/CITADEL-GOLD-VIDEO-10mb.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
             <div
