@@ -166,8 +166,8 @@ export default function GoldSilverPromoPage() {
             {/* Placeholder for gold bar/coin image */}
             <div className="hero-product-image">
               <Image
-                src="/gold-american-eagle.png"
-                alt="Gold Coins"
+                src="/liberty-2026.png"
+                alt="Gold Liberty Coin"
                 width={350}
                 height={350}
                 className="product-img"
