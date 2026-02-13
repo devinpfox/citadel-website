@@ -69,7 +69,8 @@ export default function ThankYouPage() {
       }).toString();
 
       // Send tracking pixel
-      new Image().src = url;
+      const img = document.createElement('img');
+      img.src = url;
     } catch (e) {
       // Silent fail for tracking
     }
