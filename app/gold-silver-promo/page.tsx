@@ -251,7 +251,7 @@ export default function GoldSilverPromoPage() {
 
       <div className="promo-page">
         {/* Header */}
-        <header className="promo-header">
+        <header className="promo-header green-material-bg">
         <div className="header-logo">
           <Image
             src="/citadel-logo-official.png"
@@ -268,7 +268,7 @@ export default function GoldSilverPromoPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="hero-section">
+      <section className="hero-section green-material-bg">
         <div className="hero-container">
           <div className="hero-form-side">
             <h1 className="hero-title">
@@ -374,7 +374,7 @@ export default function GoldSilverPromoPage() {
       </section>
 
       {/* Trust Badges Bar */}
-      <section className="trust-badges-section">
+      <section className="trust-badges-section green-material-bg">
         <p className="trust-intro">Trusted by thousands of investors nationwide</p>
         <div className="trust-badges">
           <div className="trust-badge">
@@ -409,7 +409,7 @@ export default function GoldSilverPromoPage() {
       </section>
 
       {/* Video Section - The Golden Thread of History */}
-      <section className="video-section">
+      <section className="video-section green-material-bg">
         <div className="video-container">
           <div className="video-content">
             <h2 className="video-title">The Golden Thread of History</h2>
@@ -456,7 +456,7 @@ export default function GoldSilverPromoPage() {
       </section>
 
       {/* CTA Bar */}
-      <section className="cta-bar">
+      <section className="cta-bar green-material-bg">
         <span>GET YOUR INVESTOR'S GUIDE TO PRECIOUS METALS</span>
         <a href="#top" className="cta-btn">Request Your Guide</a>
       </section>
@@ -508,7 +508,7 @@ export default function GoldSilverPromoPage() {
       </section>
 
       {/* Why Citadel Gold Section */}
-      <section className="why-us-section">
+      <section className="why-us-section green-material-bg">
         <div className="stars">★ ★ ★ ★ ★</div>
         <h3>Why Citadel Gold</h3>
         <p className="why-tagline">
@@ -545,7 +545,7 @@ export default function GoldSilverPromoPage() {
       </section>
 
       {/* Depository Section */}
-      <section className="depository-section">
+      <section className="depository-section green-material-bg">
         <div className="depository-container">
           <div className="depository-info">
             <h2>ENSURE YOUR INVESTMENT IS SAFE</h2>
@@ -584,7 +584,7 @@ export default function GoldSilverPromoPage() {
       </section>
 
       {/* Final CTA */}
-      <section className="cta-bar final-cta">
+      <section className="cta-bar final-cta green-material-bg">
         <span>GET YOUR INVESTOR'S GUIDE TO PRECIOUS METALS</span>
         <a href="#top" className="cta-btn">Request Your Guide</a>
       </section>
@@ -608,7 +608,7 @@ export default function GoldSilverPromoPage() {
       )}
 
       {/* Footer */}
-      <footer className="promo-footer">
+      <footer className="promo-footer green-material-bg">
         <div className="footer-disclaimer">
           <p>
             Offers subject to availability. Valid for first-time qualifying purchases only. Limit one per
@@ -644,10 +644,36 @@ export default function GoldSilverPromoPage() {
           background: #1a1f18;
           font-family: 'Montserrat', sans-serif;
           color: #f5f0e8;
+          font-size: 16px;
         }
 
         .gold-text {
           color: #d4af37;
+        }
+
+        /* Material background overlay - matches homepage */
+        .green-material-bg {
+          position: relative;
+        }
+
+        .green-material-bg::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background-image: url('/green-background.png');
+          background-size: cover;
+          background-position: center;
+          opacity: 0.20;
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .green-material-bg > * {
+          position: relative;
+          z-index: 1;
         }
 
         /* Header */
@@ -674,12 +700,12 @@ export default function GoldSilverPromoPage() {
         .header-cta-label {
           font-size: 10px;
           letter-spacing: 2px;
-          color: #a89f8c;
+          color: #c4baa6;
           margin-bottom: 4px;
         }
 
         .header-phone {
-          font-size: 20px;
+          font-size: 22px;
           font-weight: 600;
           color: #d4af37;
           text-decoration: none;
@@ -716,9 +742,9 @@ export default function GoldSilverPromoPage() {
         }
 
         .hero-subtitle {
-          font-size: 14px;
+          font-size: 16px;
           line-height: 1.7;
-          color: #a89f8c;
+          color: #c4baa6;
           margin-bottom: 30px;
         }
 
@@ -736,16 +762,16 @@ export default function GoldSilverPromoPage() {
         }
 
         .form-group label {
-          font-size: 12px;
+          font-size: 14px;
           font-weight: 500;
-          color: #a89f8c;
+          color: #c4baa6;
         }
 
         .form-group input {
-          padding: 14px 16px;
+          padding: 16px 18px;
           background: #ffffff;
           border: 1px solid #ddd;
-          font-size: 14px;
+          font-size: 16px;
           font-family: 'Montserrat', sans-serif;
           color: #333;
         }
@@ -767,9 +793,9 @@ export default function GoldSilverPromoPage() {
         }
 
         .form-checkbox label {
-          font-size: 11px;
-          color: #6a6358;
-          line-height: 1.5;
+          font-size: 13px;
+          color: #9a9080;
+          line-height: 1.6;
         }
 
         .form-checkbox a {
@@ -857,8 +883,8 @@ export default function GoldSilverPromoPage() {
         }
 
         .trust-intro {
-          font-size: 14px;
-          color: #a89f8c;
+          font-size: 16px;
+          color: #c4baa6;
           margin-bottom: 24px;
         }
 
@@ -882,8 +908,8 @@ export default function GoldSilverPromoPage() {
         }
 
         .trust-badge span {
-          font-size: 11px;
-          color: #a89f8c;
+          font-size: 13px;
+          color: #c4baa6;
           text-transform: uppercase;
           letter-spacing: 1px;
         }
@@ -907,9 +933,9 @@ export default function GoldSilverPromoPage() {
         .why-section p {
           max-width: 900px;
           margin: 0 auto;
-          font-size: 14px;
+          font-size: 16px;
           line-height: 1.8;
-          color: #4a4740;
+          color: #5a5750;
         }
 
         /* Video Section */
@@ -947,9 +973,9 @@ export default function GoldSilverPromoPage() {
         }
 
         .video-text {
-          font-size: 15px;
+          font-size: 16px;
           line-height: 1.8;
-          color: #a89f8c;
+          color: #c4baa6;
           margin-bottom: 20px;
         }
 
@@ -1031,9 +1057,9 @@ export default function GoldSilverPromoPage() {
         }
 
         .cta-bar span {
-          font-size: 14px;
+          font-size: 16px;
           letter-spacing: 2px;
-          color: #a89f8c;
+          color: #c4baa6;
         }
 
         .cta-btn {
@@ -1111,8 +1137,8 @@ export default function GoldSilverPromoPage() {
         }
 
         .offer-condition {
-          font-size: 12px;
-          color: #6a6358;
+          font-size: 14px;
+          color: #9a9080;
           margin-bottom: 24px;
         }
 
@@ -1167,7 +1193,7 @@ export default function GoldSilverPromoPage() {
         .why-us-section h3 {
           font-size: 14px;
           letter-spacing: 2px;
-          color: #a89f8c;
+          color: #c4baa6;
           margin-bottom: 16px;
         }
 
@@ -1207,8 +1233,8 @@ export default function GoldSilverPromoPage() {
         }
 
         .feature span {
-          font-size: 11px;
-          color: #a89f8c;
+          font-size: 13px;
+          color: #c4baa6;
           text-transform: uppercase;
           letter-spacing: 1px;
         }
@@ -1244,21 +1270,21 @@ export default function GoldSilverPromoPage() {
         }
 
         .depository-subtitle {
-          font-size: 12px;
+          font-size: 14px;
           letter-spacing: 2px;
-          color: #6a6358;
+          color: #9a9080;
           margin-bottom: 30px;
         }
 
         .depository-info p {
-          font-size: 14px;
+          font-size: 16px;
           line-height: 1.8;
-          color: #a89f8c;
+          color: #c4baa6;
           margin-bottom: 20px;
         }
 
         .depository-info h4 {
-          font-size: 14px;
+          font-size: 16px;
           font-weight: 600;
           margin-bottom: 16px;
         }
@@ -1295,9 +1321,9 @@ export default function GoldSilverPromoPage() {
         }
 
         .footer-disclaimer p {
-          font-size: 11px;
+          font-size: 13px;
           line-height: 1.7;
-          color: #6a6358;
+          color: #9a9080;
           text-align: center;
         }
 
@@ -1320,11 +1346,11 @@ export default function GoldSilverPromoPage() {
 
         .bbb-badge, .google-badge {
           font-size: 12px;
-          color: #a89f8c;
+          color: #c4baa6;
         }
 
         .footer-phone {
-          font-size: 18px;
+          font-size: 20px;
           font-weight: 600;
           color: #d4af37;
           text-decoration: none;
@@ -1336,11 +1362,11 @@ export default function GoldSilverPromoPage() {
           bottom: 24px;
           right: 24px;
           background: linear-gradient(135deg, #2a3328 0%, #1f2620 100%);
-          border: 1px solid rgba(212, 175, 55, 0.4);
-          border-radius: 16px;
-          padding: 20px 24px;
-          max-width: 320px;
-          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(212, 175, 55, 0.1);
+          border: 2px solid rgba(212, 175, 55, 0.5);
+          border-radius: 20px;
+          padding: 28px 32px;
+          max-width: 380px;
+          box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(212, 175, 55, 0.15);
           z-index: 999;
           animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -1362,7 +1388,7 @@ export default function GoldSilverPromoPage() {
           right: 12px;
           background: transparent;
           border: none;
-          color: #6a6358;
+          color: #9a9080;
           font-size: 20px;
           cursor: pointer;
           padding: 4px 8px;
@@ -1375,11 +1401,11 @@ export default function GoldSilverPromoPage() {
         }
 
         .sticky-content p {
-          font-size: 14px;
+          font-size: 18px;
           line-height: 1.6;
           color: #f5f0e8;
           margin: 0;
-          padding-right: 16px;
+          padding-right: 20px;
         }
 
         .sticky-call-btn {
@@ -1387,10 +1413,10 @@ export default function GoldSilverPromoPage() {
           background: linear-gradient(135deg, #d4af37, #b8860b);
           color: #1a1f18;
           font-weight: 700;
-          font-size: 13px;
+          font-size: 16px;
           text-decoration: none;
-          padding: 6px 14px;
-          border-radius: 20px;
+          padding: 10px 20px;
+          border-radius: 24px;
           transition: all 0.3s;
         }
 
@@ -1403,8 +1429,8 @@ export default function GoldSilverPromoPage() {
           background: none;
           border: none;
           color: #d4af37;
-          font-size: 14px;
-          font-weight: 500;
+          font-size: 18px;
+          font-weight: 600;
           font-family: inherit;
           text-decoration: underline;
           text-underline-offset: 3px;
@@ -1419,9 +1445,9 @@ export default function GoldSilverPromoPage() {
 
         .sticky-disclaimer {
           display: block;
-          font-size: 11px;
-          color: #6a6358;
-          margin-top: 8px;
+          font-size: 13px;
+          color: #9a9080;
+          margin-top: 10px;
           font-style: italic;
         }
 
@@ -1494,6 +1520,10 @@ export default function GoldSilverPromoPage() {
 
           .header-cta {
             align-items: center;
+          }
+
+          .header-phone {
+            font-size: 26px;
           }
 
           .hero-section {
@@ -1577,30 +1607,34 @@ export default function GoldSilverPromoPage() {
             gap: 12px;
           }
 
+          .footer-phone {
+            font-size: 24px;
+          }
+
           .sticky-cta {
             bottom: 16px;
             right: 16px;
             left: 16px;
             max-width: none;
-            padding: 16px 20px;
-            border-radius: 12px;
+            padding: 24px 24px;
+            border-radius: 16px;
           }
 
           .sticky-content p {
-            font-size: 13px;
+            font-size: 17px;
           }
 
           .sticky-call-btn {
-            font-size: 12px;
-            padding: 5px 12px;
+            font-size: 15px;
+            padding: 10px 18px;
           }
 
           .sticky-form-link {
-            font-size: 13px;
+            font-size: 17px;
           }
 
           .sticky-disclaimer {
-            font-size: 10px;
+            font-size: 12px;
           }
         }
       `}</style>
